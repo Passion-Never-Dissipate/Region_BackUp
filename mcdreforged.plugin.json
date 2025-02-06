@@ -1,15 +1,15 @@
 {
 	"id": "region_backup",
-	"version": "1.7.0",
+	"version": "1.8.0",
 	"name": "Region BackUp",
 	"description": {
 		"en_us": "An MCDR plugin that backs up or backs up files on a regional basis",
 		"zh_cn": "一个以区域为单位备份或回档的MCDR插件"
 	},
 	"author": [
-		"FRUITS_CANDY","Bexerlmao","mc_doge_","SeeU_SAMA"
+		"FRUITS_CANDY","Bexerlmao","SeeU_SAMA"
 	],
-	"link": "https://github.com/GHS-Official/Region-BackUp",
+	"link": "https://github.com/Passion-Never-Dissipate/Region_BackUp",
 	"dependencies": {
 		"mcdreforged": ">=2.6.0"
 	},
