@@ -37,12 +37,14 @@ back_slot = None
 time_out = 5
 # 本次备份是否为永久备份
 static = None
+
+
 # 静态备份指令运行状态
 
 
 def print_help_msg(source: InfoCommandSource):
     if len(source.get_info().content.split()) < 2:
-        source.reply(Message.get_json_str(tr("help_message", Prefix, "Region BackUp", "1.8.0")))
+        source.reply(Message.get_json_str(tr("help_message", Prefix, "Region BackUp", cfg.plugin_version)))
         source.get_server().execute_command("!!rb list", source)
 
     else:
@@ -867,10 +869,10 @@ def on_info(server: PluginServerInterface, info: Info):
 def on_load(server: PluginServerInterface, old):
     global cfg
 
-    if not os.path.exists(server.get_data_folder()):
-        server.save_config_simple(rb_config.get_default(), in_data_folder=True)
+    if not os.path.exists(os.path.join(server.get_data_folder(), "config.json")):
+        server.save_config_simple(rb_config.get_default())
 
-    cfg = server.load_config_simple(in_data_folder=True, target_class=rb_config.get_default())
+    cfg = server.load_config_simple(target_class=rb_config.get_default())
 
     os.makedirs(cfg.backup_path, exist_ok=True)
 
