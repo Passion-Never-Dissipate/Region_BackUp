@@ -14,6 +14,7 @@ class rb_info(Serializable):
 
 class rb_config(Serializable):
     backup_path: str = "./rb_multi"
+    static_backup_path: str = "./rb_static"
     world_path: str = "./server/world"
     minimum_permission_level: Dict[str, int] = {
         "make": 1,
@@ -28,4 +29,5 @@ class rb_config(Serializable):
         "list": 0
     }
     slot: int = 5
+    config_version: str = "1.8.0"
 
