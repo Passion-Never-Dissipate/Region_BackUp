@@ -1,4 +1,3 @@
-import codecs
 import datetime
 import json
 import os
@@ -6,6 +5,7 @@ import re
 import shutil
 import time
 import math
+import traceback
 
 from concurrent.futures import ThreadPoolExecutor
 from mcdreforged.api.all import *
@@ -46,7 +46,7 @@ static = None
 
 def print_help_msg(source: InfoCommandSource):
     if len(source.get_info().content.split()) < 2:
-        source.reply(Message.get_json_str(tr("help_message", Prefix, "Region BackUp", cfg.plugin_version)))
+        source.reply(Message.get_json_str(tr("help_message", Prefix, "Region BackUp", rb_config.plugin_version)))
         source.get_server().execute_command("!!rb list", source)
 
     else:
@@ -139,11 +139,11 @@ def rb_make(source: InfoCommandSource, dic: dict):
             backup_state = None
             return
 
-    except Exception as e:
+    except Exception:
         user = None
         static = None
         backup_state = None
-        source.reply(tr("backup_error.unknown_error", e))
+        source.reply(tr("backup_error.unknown_error", traceback.format_exc()))
         source.get_server().execute("save-on")
         return
 
@@ -228,11 +228,11 @@ def rb_pos_make(source: InfoCommandSource, dic: dict):
             backup_state = None
             return
 
-    except Exception as e:
+    except Exception:
         static = None
         backup_state = None
         user = None
-        source.reply(tr("backup_error.unknown_error", e))
+        source.reply(tr("backup_error.unknown_error", traceback.format_exc()))
         source.get_server().execute("save-on")
         return
 
@@ -330,11 +330,11 @@ def rb_dim_make(source: InfoCommandSource, dic: dict):
             backup_state = None
             return
 
-    except Exception as e:
+    except Exception:
         user = None
         static = None
         backup_state = None
-        source.reply(tr("backup_error.unknown_error", e))
+        source.reply(tr("backup_error.unknown_error", traceback.format_exc()))
         source.get_server().execute("save-on")
         return
 
@@ -393,7 +393,7 @@ def rb_back(source: InfoCommandSource, dic: dict):
 
             back_state = 0
             # 等待确认
-            with codecs.open(os.path.join(path, "info.json"), encoding=coding) as fp:
+            with open(os.path.join(path, "info.json"), encoding=coding) as fp:
                 info = json.load(fp)
                 t = info["time"]
                 cmt = info["comment"]
@@ -433,9 +433,9 @@ def rb_back(source: InfoCommandSource, dic: dict):
             back_state = None
             return
 
-    except Exception as e:
+    except Exception:
         back_state = back_slot = None
-        source.reply(tr("back_error.unknown_error", e))
+        source.reply(tr("back_error.unknown_error", traceback.format_exc()))
         return
 
     source.reply(tr("back_error.repeat_back"))
@@ -461,7 +461,7 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
             path_ = path_ + f"/slot{back_slot}" if isinstance(back_slot, int) \
                 else os.path.join(cfg.backup_path, "overwrite")
 
-            with codecs.open(os.path.join(path_, "info.json"), encoding=coding) as fp:
+            with open(os.path.join(path_, "info.json"), encoding=coding) as fp:
                 info = json.load(fp)
                 dim = info["backup_dimension"]
 
@@ -536,10 +536,10 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
 
             server.start()
 
-    except Exception as e:
+    except Exception:
         static = None
         back_slot = None
-        server.logger.error(tr("back_error.unknown_error", e))
+        server.logger.error(tr("back_error.unknown_error", traceback.format_exc()))
         return
 
 
@@ -556,8 +556,8 @@ def rb_del(source: InfoCommandSource, dic: dict):
 
         source.reply(tr("del_error.lack_slot", dic['slot']))
 
-    except Exception as e:
-        source.reply(tr("del_error.unknown_error", e))
+    except Exception:
+        source.reply(tr("del_error.unknown_error", traceback.format_exc()))
         return
 
 
@@ -663,22 +663,16 @@ def rb_list(source: InfoCommandSource, dic: dict):
             name = f"slot{i}"
             path = os.path.join(path_, name, "info.json")
             if os.path.exists(path):
-                info = source.get_server().as_plugin_server_interface().load_config_simple(
-                    path, in_data_folder=False, failure_policy="raise", echo_in_console=False, encoding=coding
-                )
+                with open(path, encoding=coding) as fp:
+                    info = json.load(fp)
 
-                if info:
-                    t = info["time"]
-                    cmt = info["comment"]
-                    dim = info['backup_dimension']
-                    user_ = info["user"]
-                    cmd = info["command"]
-                    size = get_total_size_of_folders([os.path.join(path_, name)])
-                    msg = tr("list.slot_info", i, size[0], t, cmt, "-s" if static else "", dim, user_, cmd)
-                    msg_list.append(msg)
-                    continue
-
-                msg = tr("list.empty_size", i)
+                t = info["time"]
+                cmt = info["comment"]
+                dim = info['backup_dimension']
+                user_ = info["user"]
+                cmd = info["command"]
+                size = get_total_size_of_folders([os.path.join(path_, name)])
+                msg = tr("list.slot_info", i, size[0], t, cmt, "-s" if static else "", dim, user_, cmd)
                 msg_list.append(msg)
 
             else:
@@ -708,9 +702,9 @@ def rb_list(source: InfoCommandSource, dic: dict):
 
         source.reply(msg)
 
-    except Exception as e:
+    except Exception:
         static = None
-        source.reply(tr("list_error", e))
+        source.reply(tr("list_error", traceback.format_exc()))
         return
 
 
@@ -739,9 +733,9 @@ def get_total_size_of_folders(folder_paths):
         for future in futures:
             try:
                 total_size += future.result()
-            except Exception as e:
+            except Exception:
                 folder_path = futures[future]
-                ServerInterface.get_instance().logger.info(f"计算 §c{folder_path} §r的大小时出错: §e{e}")
+                ServerInterface.get_instance().logger.info(f"计算 §c{folder_path} §r的大小时出错: §e{traceback.format_exc()}")
 
     return convert_bytes(total_size), total_size
 
@@ -760,8 +754,8 @@ def rb_reload(source: CommandSource):
     try:
         source.get_server().reload_plugin("region_backup")
         source.reply(tr("reload"))
-    except Exception as e:
-        source.reply(tr("reload_error", e))
+    except Exception:
+        source.reply(tr("reload_error", traceback.format_exc()))
 
 
 def tr(key, *args):
@@ -769,7 +763,8 @@ def tr(key, *args):
 
 
 def on_unload(server: PluginServerInterface):
-    global user, back_state, backup_state, back_slot, static
+    global user, back_state, backup_state, back_slot, static, cfg
+    cfg = rb_config
     user = backup_state = back_state = back_slot = static = None
 
 
@@ -809,7 +804,7 @@ def make_info_file(cmt, data=None, backup_dim=None, user_=None, cmd=None):
     info["command"] = data[1] if not cmd else cmd
     info["comment"] = cmt
 
-    with codecs.open(file_path, "w", encoding=coding) as fp:
+    with open(file_path, "w") as fp:
         json.dump(info, fp, ensure_ascii=False, indent=4)
 
 
@@ -872,7 +867,7 @@ def on_load(server: PluginServerInterface, old):
     global cfg
 
     if not os.path.exists(cfg_path):
-        server.save_config_simple(file_name=cfg_path, in_data_folder=False, config=rb_config.get_default(), encoding=coding)
+        server.save_config_simple(file_name=cfg_path, in_data_folder=False, config=rb_config.get_default())
 
     cfg = server.load_config_simple(file_name=cfg_path, in_data_folder=False, target_class=rb_config, encoding=coding)
 
