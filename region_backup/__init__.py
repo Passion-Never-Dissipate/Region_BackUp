@@ -15,6 +15,8 @@ from region_backup.json_message import Message
 Prefix = '!!rb'
 # 默认的插件配置文件
 cfg = rb_config
+cfg_path = "./config/Region_BackUp.json"
+coding = "utf-8-sig"
 # 地狱，末地世界区域文件位置
 dim_dict = {"the_nether": "DIM-1", "the_end": "DIM1"}
 # 维度对应表
@@ -391,7 +393,7 @@ def rb_back(source: InfoCommandSource, dic: dict):
 
             back_state = 0
             # 等待确认
-            with codecs.open(os.path.join(path, "info.json"), encoding="utf-8") as fp:
+            with codecs.open(os.path.join(path, "info.json"), encoding=coding) as fp:
                 info = json.load(fp)
                 t = info["time"]
                 cmt = info["comment"]
@@ -459,7 +461,7 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
             path_ = path_ + f"/slot{back_slot}" if isinstance(back_slot, int) \
                 else os.path.join(cfg.backup_path, "overwrite")
 
-            with codecs.open(os.path.join(path_, "info.json"), encoding="utf-8") as fp:
+            with codecs.open(os.path.join(path_, "info.json"), encoding=coding) as fp:
                 info = json.load(fp)
                 dim = info["backup_dimension"]
 
@@ -662,7 +664,7 @@ def rb_list(source: InfoCommandSource, dic: dict):
             path = os.path.join(path_, name, "info.json")
             if os.path.exists(path):
                 info = source.get_server().as_plugin_server_interface().load_config_simple(
-                    path, in_data_folder=False, failure_policy="raise", echo_in_console=False
+                    path, in_data_folder=False, failure_policy="raise", echo_in_console=False, encoding=coding
                 )
 
                 if info:
@@ -807,7 +809,7 @@ def make_info_file(cmt, data=None, backup_dim=None, user_=None, cmd=None):
     info["command"] = data[1] if not cmd else cmd
     info["comment"] = cmt
 
-    with codecs.open(file_path, "w", encoding="utf-8") as fp:
+    with codecs.open(file_path, "w", encoding=coding) as fp:
         json.dump(info, fp, ensure_ascii=False, indent=4)
 
 
@@ -869,10 +871,10 @@ def on_info(server: PluginServerInterface, info: Info):
 def on_load(server: PluginServerInterface, old):
     global cfg
 
-    if not os.path.exists(os.path.join(server.get_data_folder(), "config.json")):
-        server.save_config_simple(rb_config.get_default())
+    if not os.path.exists(cfg_path):
+        server.save_config_simple(file_name=cfg_path, in_data_folder=False, config=rb_config.get_default(), encoding=coding)
 
-    cfg = server.load_config_simple(target_class=rb_config.get_default())
+    cfg = server.load_config_simple(file_name=cfg_path, in_data_folder=False, target_class=rb_config, encoding=coding)
 
     os.makedirs(cfg.backup_path, exist_ok=True)
 
