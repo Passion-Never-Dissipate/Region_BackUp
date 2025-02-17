@@ -1,14 +1,39 @@
 
 region_backup:
 
+
    register_message: 查看与区域备份有关的指令
+
+
+   config_error: §c配置文件出错,请检查错误或重新生成配置文件
+
 
    lack_permission: 你没有运行该指令的权限
 
+
+   reload: §a§lRegion_BackUp已重载
+
+
+   list_error: 显示备份列表出错,错误信息:§c{}
+
+
+   reload_error: 重载插件失败,错误信息:§c{}
+
+
+   del: §4§l槽位{}删除成功
+
+
+   abort: 没有什么好中断的
+
+
+   confirm: 没有什么好确认的
+
+
    help_message: |
     ------ {1} {2} ------
-    一个以区域为单位的§a备份回档§a插件 #sc=!!rb help#§6[点我查看新功能静态备份]
+    一个以区域为单位的§a备份回档§a插件
     §3作者: FRUITS_CANDY
+    #sc=!!rb update_slot#§6[点我升级1.8.4及之前的备份格式以适应插件新功能]
     §d【常用指令】
     #sc=!!rb help<>st=点击运行指令#§7{0} help §f查看所有指令用法
     #sc=!!rb make<>st=点击运行指令#§7{0} make §6<区块半径> §e[<注释>] §f以当前区块为中心,备份边长为2倍半径+1的区块所在区域/§e<注释>§f为可选注释
@@ -20,10 +45,15 @@ region_backup:
     #sc=!!rb confirm<>st=点击运行指令#§7{0} confirm §f再次确认是否回档
     #sc=!!rb abort<>st=点击运行指令#§7{0} abort §f在任何时候键入此指令可中断回档
     #sc=!!rb list<>st=点击运行指令#§7{0} list §e[<页数>] §f显示备份槽位信息
+    #sc=!!rb update_slot<>st=点击运行指令#§7{0} update_slot §f将§c1.8.4§f及之前生成的备份升级到新版本
     #sc=!!rb reload<>st=点击运行指令#§7{0} reload §f重载插件
+    #ou=https://github.com/Passion-Never-Dissipate/Region_BackUp<>st=点我进入插件仓库了解更多用法#§d想了解更详细的用法?§b点我了解更多§6<——
+
 
    full_help_message: |
     §d【全部指令】
+    #sc=!!rb update_slot#§6[点我升级1.8.4及之前的备份格式以适应插件新功能]
+    #ou=https://github.com/Passion-Never-Dissipate/Region_BackUp<>st=点我进入插件仓库了解更多用法#§d想了解更详细的用法?§b点我了解更多§6<——
     #sc=!!rb<>st=点击运行指令#§7{0} §f查看帮助信息
     #sc=!!rb help<>st=点击运行指令#§7{0} help §e查看所有指令用法
     #sc=!!rb make<>st=点击运行指令#§7{0} make §6<区块半径> §e[<注释>] §f以当前区块为中心,备份边长为2倍半径+1的区块所在区域/§e<注释>§f为可选注释
@@ -41,21 +71,13 @@ region_backup:
     #sc=!!rb abort<>st=点击运行指令#§7{0} abort §e在任何时候键入此指令可中断回档
     #sc=!!rb list<>st=点击运行指令#§7{0} list §e[<页数>] §f显示备份槽位信息
     #sc=!!rb list -s<>st=点击运行指令#§7{0} list §b-s §6<参数同上> §f同上,只是查看的备份为§c静态备份§f(即§a永久备份§f)
+    #sc=!!rb update_slot<>st=点击运行指令#§7{0} update_slot §f将§c1.8.4§f及之前生成的备份升级到新版本
     #sc=!!rb reload<>st=点击运行指令#§7{0} reload §e重载插件
-
-   default_comment: §7空
-
-   default_info: 无
-
-   console: 服务器后台
+     
 
    backup_error:
         
        source_error: §c§l该指令只能由玩家输入!
-        
-       radius_error: §c备份半径应为大于等于0的整数!
-        
-       invalid_pos: §c本次备份无效,根据输入的坐标,未找到对应的区域
         
        repeat_backup: §c§l备份正在进行,请不要重复备份!
         
@@ -66,7 +88,8 @@ region_backup:
        timeout: "[RBU] §c备份§f超时,已取消备份"
         
        unknown_error: "备份出错,错误信息: §c{}"
-        
+
+
    back_error:
 
        dim_error: §c维度输入错误
@@ -84,16 +107,14 @@ region_backup:
        server_error: 服务端关闭异常,回档终止
         
        wrong_dim: 请检查info.json里的维度信息是否正确
-        
+
+
    del_error:
         
        lack_slot: §4§l槽位{}不存在
         
        unknown_error: 删除备份时出错,错误信息:§c{}
 
-   list_error: 显示备份列表出错,错误信息:§c{}
-
-   reload_error: 重载插件失败,错误信息:§c{}
 
    backup:
         
@@ -102,7 +123,8 @@ region_backup:
        date: "[RBU] 日期: {}; 注释: {}"
         
        done: "[RBU] §a备份§f完成，耗时§6{}§f秒"
-        
+
+
    back:
         
        start: "[RBU] 准备将存档恢复至槽位§6{}§f，日期 {}; 注释: {}"
@@ -111,17 +133,12 @@ region_backup:
                 
        abort: §a回档已取消
          
-       countdown: §c服务器将于10秒后关闭回档!
+       countdown: §c服务器将于{0}秒后关闭回档!
         
        count: "§a服务器还有{}秒关闭，输入#sc=!!rb abort<>st=终止回档#§c!!rb abort§f来停止回档到槽位§6{}"
         
        run: §a正在运行文件替换
         
-   del: §4§l槽位{}删除成功
-        
-   abort: 没有什么好中断的
-
-   confirm: 没有什么好确认的
 
    list:
         
@@ -135,7 +152,7 @@ region_backup:
 
        slot_info:  '#st=备份维度: §a{5} §f备份用户: §b{6} §f备份指令: §6{7}#[槽位§6{0}§f] #sc=!!rb back {4} {0}<>st=回档至槽位§6{0}#§a[▷] #sc=!!rb del {4} {0}<>st=删除槽位§6{0}#§c[x] ##§a{1} §f{2} 注释: {3}'
         
-       empty_size: "[槽位§6{}§f] 空"
+       empty_size: "[槽位§6{}§f] 空或者缺少info.json文件"
 
        last_page: "#st=当前为第{0}页,点击转到第{1}页<>sc=!!rb list {2} {1}#§b[上一页]"
 
@@ -145,5 +162,23 @@ region_backup:
 
        total_size: "动态备份占用: §6{} §r静态备份占用: §b{} §r总占用: §a{}"
 
-   reload: §a§l插件已重载
+
+   update_slot:
+
+       start: §a正在进行备份升级,这可能需要一段时间,期间请不要使用插件任何功能!
+
+       non-need: §c当前备份不需要升级，只有1.8.4版本及之前创建的备份需要！
+
+       done: §a成功升级了§e{}§a个备份
+
+
+   comment:
+
+       empty_comment: §7空
+
+       overwrite_comment: §7这是回档时插件自动创建的覆盖备份
+
+       console: 服务器后台
+
+
     
