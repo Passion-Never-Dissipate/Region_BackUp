@@ -1,4 +1,5 @@
 from mcdreforged.api.utils.serializer import Serializable
+from typing import Dict
 
 
 class rb_info(Serializable):
@@ -16,7 +17,7 @@ class rb_config(Serializable):
     static_backup_path: str = "./rb_static"
     overwrite_backup_folder: str = "overwrite"
     bukkit_mode: bool = False
-    dimension_info: dict[str, dict] = {
+    dimension_info: Dict[str, dict] = {
         "0": {"dimension": "overworld",
               "world_name": "world",
               "region_folder": [
@@ -42,7 +43,7 @@ class rb_config(Serializable):
               ]
               }
     }
-    dimension_info_for_bukkit: dict[str, dict] = {
+    dimension_info_for_bukkit: Dict[str, dict] = {
         "0": {"dimension": "overworld",
               "world_name": "world",
               "region_folder": [
@@ -68,7 +69,7 @@ class rb_config(Serializable):
               ]
               }
     }
-    minimum_permission_level: dict[str, int] = {
+    minimum_permission_level: Dict[str, int] = {
         "make": 1,
         "pos_make": 1,
         "dim_make": 1,
