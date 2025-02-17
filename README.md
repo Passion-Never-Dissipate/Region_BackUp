@@ -50,19 +50,28 @@
 维度名不能随便填，一个不被minecraft承认的非法维度名将会导致插件无法获取玩家在使用!!rb make指令时所对应的维度，导致备份超时，要获取一个维度所对应的维度名有几种方法：
 
 (1) 使用F3调试屏幕：在游戏中按下F3键，可以打开调试屏幕。在调试屏幕的左上角部分，可以看到当前所在维度的信息。
-![alt text](images/before_use1.png)
+
+![图片加载失败](images/before_use1.png)
+
+由此可知该玩家所在维度的合法维度名为twilightforest:twilight_forest
+
+(2) 使用/data get entity 玩家id Dimension指令来获取玩家当前所在维度名
+
+![图片加载失败](images/before_use2.png)
+
+由此可知该玩家所在维度的合法维度名为twilightforest:twilight_forest
 
 以下是一个添加其他维度的例子：
 
 ```
 "dimension_info": {
         "-2": {
-            "dimension": "minecraft:newworld",
+            "dimension": "twilightforest:twilight_forest",
             "world_name": "world",
             "region_folder": [
-                "DIM-2/poi",
-                "DIM-2/poi",
-                "DIM-2/poi"
+                "dimensions/twilightforest/twilight_forest/poi",
+                "dimensions/twilightforest/twilight_forest/entities",
+                "dimensions/twilightforest/twilight_forest/region"
             ]
         },
         "0": {
@@ -94,7 +103,7 @@
         }
 ```
 
-可以看到，-2与minecraft:newworld是新增加的一对维度
+由上例可知，-2与twilightforest:twilight_forest是新增加的一对维度,现在你也可以对该维度使用备份功能了！
 
 
 5.由于插件在备份时会保存区域的方块数据、实体数据和兴趣点数据，因此可能会有玩家用此来刷取物品，因为插件只会备份与区域有关的数据，而不会与其他数据产生交互。
