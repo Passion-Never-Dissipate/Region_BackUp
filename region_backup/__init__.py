@@ -52,17 +52,22 @@ def rb_make(source: InfoCommandSource, dic: dict):
                 data = None
                 region.backup_state = None
                 source.get_server().execute("save-on")
-                source.reply("backup_error.timeout")
+                source.reply(tr("backup_error.timeout"))
                 return
             _data = copy.copy(data)
             data = None
             backup_path = region.get_backup_path(source.get_info().content)
-            region.organize_slot(backup_path, 1)
+            is_more = region.organize_slot(backup_path, 1)
+            if is_more:
+                region.backup_state = None
+                source.get_server().execute("save-on")
+                source.get_server().broadcast(is_more)
+                return
             coord = region.coordinate_transfer(_data.coordinate[:1] + _data.coordinate[2:], radius)
             if region.copy(_data.dimension, backup_path, coord):
                 region.backup_state = None
                 source.get_server().execute("save-on")
-                source.reply(tr("config_error"))
+                source.get_server().broadcast(tr("config_error"))
                 return
             region.save_info_file(_data.dimension, backup_path, source.get_info().content, dic["comment"], src=source)
             t1 = time.time()
@@ -105,15 +110,20 @@ def rb_pos_make(source: InfoCommandSource, dic: dict):
                 data = None
                 region.backup_state = None
                 source.get_server().execute("save-on")
-                source.reply("backup_error.timeout")
+                source.reply(tr("backup_error.timeout"))
                 return
             data = None
             backup_path = region.get_backup_path(source.get_info().content)
+            is_more = region.organize_slot(backup_path, 1)
+            if is_more:
+                region.backup_state = None
+                source.get_server().execute("save-on")
+                source.get_server().broadcast(is_more)
+                return
             coord = region.coordinate_transfer(
                 [(int(x1 // 512), int(x2 // 512)), (int(z1 // 512), int(z2 // 512))]
                 , command="pos_make"
             )
-            region.organize_slot(backup_path, 1)
             if region.copy(str(dic["dimension_int"]), backup_path, coord):
                 region.backup_state = None
                 source.get_server().execute("save-on")
@@ -171,11 +181,16 @@ def rb_dim_make(source: InfoCommandSource, dic: dict):
                 data = None
                 region.backup_state = None
                 source.get_server().execute("save-on")
-                source.reply("backup_error.timeout")
+                source.reply(tr("backup_error.timeout"))
                 return
             data = None
             backup_path = region.get_backup_path(source.get_info().content)
-            region.organize_slot(backup_path, 1)
+            is_more = region.organize_slot(backup_path, 1)
+            if is_more:
+                region.backup_state = None
+                source.get_server().execute("save-on")
+                source.get_server().broadcast(is_more)
+                return
             for dim in dimension:
                 if region.copy(dim, backup_path):
                     region.backup_state = None
@@ -653,7 +668,18 @@ class region:
         if rename:
             max_slots = cfg.static_slot if backup_path != cfg.backup_path else cfg.slot
 
+            if len(sorted_list) > max_slots:
+                msg = tr(
+                    "backup_error.static_more_than", max_slots, len(sorted_list)
+                ) if backup_path != cfg.backup_path else tr(
+                    "backup_error.dynamic_more_than", max_slots, len(sorted_list)
+                )
+
+                return msg
+
             if len(sorted_list) == max_slots:
+                if backup_path != cfg.backup_path:
+                    return tr("backup_error.static_more_than", max_slots, len(sorted_list))
                 shutil.rmtree(os.path.join(backup_path, f"slot{max_slots}"), ignore_errors=True)
                 sorted_list.pop()
 
