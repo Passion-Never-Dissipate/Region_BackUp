@@ -86,6 +86,10 @@ region_backup:
        dim_repeat: §c维度输入重复
         
        timeout: "[RBU] §c备份§f超时,已取消备份"
+
+       dynamic_more_than: §b动态备份§f槽位§c已满§f,最大数量为§e{}§f个,已存在§e{}§f个!
+
+       static_more_than: §b静态备份§f槽位§c已满§f,最大数量为§e{}§f个,已存在§e{}§f个!
         
        unknown_error: "备份出错,错误信息: §c{}"
 
@@ -107,6 +111,7 @@ region_backup:
        server_error: 服务端关闭异常,回档终止
         
        wrong_dim: 请检查info.json里的维度信息是否正确
+
 
 
    del_error:
