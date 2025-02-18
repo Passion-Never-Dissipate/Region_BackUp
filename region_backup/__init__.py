@@ -531,7 +531,7 @@ class player_info:
             time.sleep(0.01)
 
         self.coordinate = [float(p.strip('d')) for p in self.coordinate.strip("[]").split(',')]
-        self.dimension = self.dimension.replace("minecraft:", "").strip('"')
+        self.dimension = self.dimension.strip('"')
         if not self.get_save_info():
             return
         return 1
