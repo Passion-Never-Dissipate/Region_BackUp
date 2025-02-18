@@ -284,14 +284,14 @@ Java <= 17: ```-Dfile.encoding=UTF-8```
               ]
               },
         "-1": {"dimension": "minecraft:the_nether",
-               "world_name": "world",
+               "world_name": "world_nether",
                "region_folder": [
                    "DIM-1/poi",
                    "DIM-1/entities",
                    "DIM-1/region"
                ]
                },
-        "1": {"dimension": "minecraft:the_end",
+        "1": {"dimension": "world_the_end",
               "world_name": "world",
               "region_folder": [
                   "DIM1/poi",
