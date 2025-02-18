@@ -8,7 +8,7 @@ class rb_info(Serializable):
     user: str = ""
     command: str = ""
     comment: str = ""
-    version_created: str = "1.9.0"
+    version_created: str = "1.9.1"
 
 
 class rb_config(Serializable):
@@ -18,7 +18,7 @@ class rb_config(Serializable):
     overwrite_backup_folder: str = "overwrite"
     bukkit_mode: bool = False
     dimension_info: Dict[str, dict] = {
-        "0": {"dimension": "overworld",
+        "0": {"dimension": "minecraft:overworld",
               "world_name": "world",
               "region_folder": [
                   "poi",
@@ -26,7 +26,7 @@ class rb_config(Serializable):
                   "region"
               ]
               },
-        "-1": {"dimension": "the_nether",
+        "-1": {"dimension": "minecraft:the_nether",
                "world_name": "world",
                "region_folder": [
                    "DIM-1/poi",
@@ -34,7 +34,7 @@ class rb_config(Serializable):
                    "DIM-1/region"
                ]
                },
-        "1": {"dimension": "the_end",
+        "1": {"dimension": "minecraft:the_end",
               "world_name": "world",
               "region_folder": [
                   "DIM1/poi",
@@ -44,7 +44,7 @@ class rb_config(Serializable):
               }
     }
     dimension_info_for_bukkit: Dict[str, dict] = {
-        "0": {"dimension": "overworld",
+        "0": {"dimension": "minecraft:overworld",
               "world_name": "world",
               "region_folder": [
                   "poi",
@@ -52,7 +52,7 @@ class rb_config(Serializable):
                   "region"
               ]
               },
-        "-1": {"dimension": "the_nether",
+        "-1": {"dimension": "minecraft:the_nether",
                "world_name": "world_nether",
                "region_folder": [
                    "DIM-1/poi",
@@ -60,7 +60,7 @@ class rb_config(Serializable):
                    "DIM-1/region"
                ]
                },
-        "1": {"dimension": "the_end",
+        "1": {"dimension": "minecraft:the_end",
               "world_name": "world_the_end",
               "region_folder": [
                   "DIM1/poi",
@@ -83,4 +83,4 @@ class rb_config(Serializable):
     }
     slot: int = 10
     static_slot: int = 50
-    plugin_version: str = "1.9.0"
+    plugin_version: str = "1.9.1"
