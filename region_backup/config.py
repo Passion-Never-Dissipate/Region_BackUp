@@ -83,4 +83,4 @@ class rb_config(Serializable):
     }
     slot: int = 10
     static_slot: int = 50
-    plugin_version: str = "1.9.2"
+    plugin_version: str = "1.9.3"
