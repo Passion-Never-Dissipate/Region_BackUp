@@ -1,7 +1,16 @@
 # Region_BackUp
 一个以区域为单位备份或回档的MCDR插件
+
+> [!NOTE]
+> Region BackUp 已停止更新，后续不会有任何维护
+> 
+> 请使用功能更多的 [Chunk Backup](https://github.com/Passion-Never-Dissipate/Chunk_BackUp) 插件，它基于Region_BackUp开发，
+> 
+> 支持区块备份，不管从哪个方面来说都是区域备份比不上的。
+
+
 > [!TIP]
->
+>                                                                                                                                     
 > 尽可能的使用最新版本，以避免潜藏的问题
 > 
 > 发现bug先看看插件是不是有新版本，新版本大概率会修复问题
